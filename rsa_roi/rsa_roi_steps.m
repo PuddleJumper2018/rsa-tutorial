@@ -3,26 +3,31 @@
 % created: Izabel M Sztuks imsztuka@protonmail.com, Maxi Becker.
 % This is a script showing the single-roi rsa analysis step by step. It
 % uses SPM12 (I have ver. 7771) and custom-adjusted rsatoolbox (which you download from the github)
+% The models used here are ARCH AN and Fractal dimensions obtained with
+% differential method.
 
 %%%%%%%%%%%%%%%%%%%%
 %Initialisation 
 %%%%%%%%%%%%%%%%%%%%
 % Customise the directories to account for your circumstances. 
 % Directory to where the ROI mask is located:
-masks = '/Users/sztuka/Documents/rsa-tutorial/rsa-roi/mask_used/';
+% replace dir '//Users/sztuka/Documents/' with path to rsa-tutorial folder.
+masks = '/Users/sztuka/Documents/rsa-tutorial/rsa_roi/mask_used/';
 % Add the name of the mask you will use
-mask_names = ["r_cuneus"];
+mask_names = {'r_cuneus'};
 % add is as a character vector to help automatise the process
 model = "r_cuneus"; % 
 % create directory for the results
-rootPath = sprintf('/home/mpib/sztuka/projects/RSA/derivatives/rsa/rsa_roi/RSA_Euclid_%s/',model)
+% replace dir '/Volumes/IMS_Drive/RSA_BIDS_2/' with path to derivatives
+% folder.
+rootPath = sprintf('/Volumes/IMS_Drive/RSA_BIDS_2/derivatives/rsa_roi/RSA_Euclid_%s_2/',model)
 mkdir(rootPath);
 % add the location of rsatoolbox
-toolboxRoot = '/Users/sztuka/Documents/rsa-tutorial/rsa-roi/rsatoolbox.git/'; addpath(toolboxRoot);
+toolboxRoot = '/Users/sztuka/Documents/rsa-tutorial/rsa_roi/rsatoolbox.git/'; addpath(toolboxRoot);
 % add spm path:
 addpath('/Users/sztuka/SPM12/');
 % add the directory containing your betas
-data_dir = '/Users/sztuka/Documents/rsa-tutorial/derivatives/1Level/RSA_1stLevel_1stDeriv/';
+data_dir = '/Volumes/IMS_Drive/RSA_BIDS_2/derivatives/1Level/RSA_1stLevel_1stDeriv/';
 % Parameters: 
 % subjects included
 subjects = 5;
@@ -33,7 +38,6 @@ subs = dir(fullfile(data_dir, 'sub-*'));
 % helper for wildcard
 subs = subs(1:subjects); 
 % add the path to structural images including wildcards
-structPath = '/home/mpib/sztuka/projects/RSA/derivatives/flipped/[[subjectName]]/anat/';
 betaPath = fullfile(data_dir,'[[subjectName]]/[[betaIdentifier]]');
 betanames = dir(rsa.util.replaceWildcards(betaPath, ...
                                           '[[subjectName]]', subs(1).name, ...
@@ -62,7 +66,7 @@ condition_names_cell = {'I-C-A-1.jpg','I-C-A-10.jpg','I-C-A-11.jpg','I-C-A-3.jpg
 % This name identifies a collection of files which all belong to the same run of a project.
 userOptions.projectName  = 'ARCH';
 % This name identifies a collection of files which all belong to the same analysis within a project.
-userOptions.analysisName = sprintf('RSA_%s',model)
+userOptions.analysisName = sprintf('RSA_%s',model);
 % This is the root directory of the project.
 userOptions.rootPath = rootPath;
 % must be a cell: {'sub1','sub2','sub3'}The list of subjects to be included in the study.
@@ -72,7 +76,7 @@ userOptions.subjectPath = data_dir;
 % The path leading to where the scans are stored (not including subject-specific identifiers).
 userOptions.betaPath = betaPath;
 % Where is the folder where masks are located -> here in the MASK FOLDER 
-userOptions.maskNames = {model};
+userOptions.maskNames = mask_names;
 userOptions.maskPath = fullfile(masks,userOptions.maskNames);
 % Here you can load more than one ROI mask. Please mind this part doesn't
 % work for me for some reason. 
@@ -106,7 +110,8 @@ userOptions.dpi = 300;
 userOptions.criterion = 'metricstress';
 % A string indicating the distance measure with which to
 % calculate the RDMs. Defaults to 'Correlation'. I also used Euclidean. 
-userOption.distance = 'Correlation';
+userOption.distance = 'euclidean';
+
 %% This part will take some time. 
 %%%%%%%%%%%%%%%%%%%%%%
 % Data preparation %%
@@ -148,7 +153,7 @@ rsa.dendrogramConditions(RDMs, userOptions);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % compute and display a second-order similarity matrix from RDMs and multidimensional scalling of 
 % RDMs
-% The measurement type (Defaults to 'Spearman' but any Matlab distance
+% The measurement type (Defaults to  v but any Matlab distance
 % measure may be used.)
 userOptions.distanceMeasure = 'Spearman';
 rsa.pairwiseCorrelateRDMs({RDMs, Models}, userOptions);
@@ -165,7 +170,6 @@ localOptions.MDScriterion = 'metricstress';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Final step compared reference RDM (ROI RDM) to candidate RDMs (AN in our case).
 % See the decision-making process on slide. 
-
 roiIndex = 1;% index of the ROI for which the group average RDM will serve 
 % as the reference RDM. 
 for i=1:numel(Models)
@@ -183,6 +187,7 @@ userOptions.candRDMdifferencesTest = 'subjectRFXsignedRank';
 userOptions.candRDMdifferencesThreshold = 0.05;
 userOptions.candRDMdifferencesMultipleTesting = 'FDR';
 stats_p_r=rsa.compareRefRDM2candRDMs(RDMs(roiIndex), models, userOptions);
+% I am saving the results to .mat files
 save('stats.mat','stats_p_r');
 disp('done')
 
