@@ -122,6 +122,7 @@ fullBrainVols = rsa.fmri.fMRIDataPreparation(betaCorrespondence, userOptions);
 binaryMasks_nS = rsa.fmri.fMRIMaskPreparation(userOptions);
 % Extracts the relevant information from ROI
 responsePatterns = rsa.fmri.fMRIDataMasking(fullBrainVols, binaryMasks_nS,betaCorrespondence, userOptions);
+
 %%%%%%%%%%%%%%%%%%%%%
 % RDM calculation %%
 %%%%%%%%%%%%%%%%%%%%%
@@ -163,7 +164,7 @@ localOptions.MDScriterion = 'metricstress';
 % RDMs.
 % Note: Doesn't work for some reason for me you can try to comment out and see if
 % that works for you. 
-%rsa.MDSRDMs({RDMs, Models}, userOptions); % problem with figureMDSArrangement 'disparities'. 
+rsa.MDSRDMs({RDMs, Models}, userOptions); % problem with figureMDSArrangement 'disparities'. 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % statistical inference %%
