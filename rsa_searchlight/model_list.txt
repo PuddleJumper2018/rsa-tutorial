@@ -1,0 +1,4 @@
+Hue
+Brightness
+Entropy
+EdgeDensity
