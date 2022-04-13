@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-# Script for Searchlight Analysis (SL) with RSA method on Python rsatoolbox
-# The script is used for distributed computation by model & participant. 
+# Script for Searchlight Analysis (SRSA) with RSA method on Python rsatoolbox
+# The script is used for distributed computation by model & participant.
+# THIS IS A SUBJECT-LEVEL SRSA ANALYSIS
 import numpy as np
 import os
 import matplotlib.pyplot as plt
@@ -57,16 +58,18 @@ def ensure_dir(file_path):
         os.makedirs(directory)
 
 # directories
-IN = '/home/mpib/sztuka/projects/RSA/derivatives/1Level/RSA_1stLevel_1stDeriv/'
-OUT_brains = '/home/mpib/sztuka/projects/RSA/derivatives/py-searchlight/LLF/'+MODEL+'/Figures/'
+IN = '/PathToBids/derivatives/1Level/RSA_1stLevel_1stDeriv/'
+# set results folders
+OUT_brains = '/PathTo/'+MODEL+'/Figures/'
 ensure_dir(OUT_brains)
-OUT_plots = '/home/mpib/sztuka/projects/RSA/derivatives/py-searchlight/LLF/'+MODEL+'/Plots/'
+OUT_plots = '/PathTo/'+MODEL+'/Plots/'
 ensure_dir(OUT_plots)
-OUT_scores = '/home/mpib/sztuka/projects/RSA/derivatives/py-searchlight/LLF/'+MODEL+'/Scores/'
+OUT_scores = '/PathTo/'+MODEL+'/Scores/'
 ensure_dir(OUT_scores)
-OUT_results = '/home/mpib/sztuka/projects/RSA/derivatives/py-searchlight/LLF/'+MODEL+'/Results/'
+OUT_results = '/PathTo/'+MODEL+'/Results/'
 ensure_dir(OUT_results)
-mat_dir = '/home/mpib/sztuka/projects/RSA/code/py-searchlight/LLF/LLF_RDM_new.mat'
+# Directory to stored Model RDM
+mat_dir = '/PathTo/Model_RDM.mat'
 
 
 # set this path to wherever you saved the folder containing the img-files
@@ -95,6 +98,7 @@ data_2d = data.reshape([data.shape[0], -1])
 data_2d = np.nan_to_num(data_2d)
 # Get RDMs
 print(SUB+' - creating brain RDMs')
+# Define distance to be calculcated. ARCH: all but dCNN models euclidean distance.
 SL_RDM = get_searchlight_RDMs(data_2d, centers, neighbors, image_value, method='euclidean')
 # load sub specific file from matlab MDS file:
 print(SUB+' - loading subjects dissimilarity matrix')

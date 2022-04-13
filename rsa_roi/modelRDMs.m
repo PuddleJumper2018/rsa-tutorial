@@ -43,14 +43,14 @@ Models.AN(N,N) = 0;
 Models.AN(A,A) = 0;
 Models.AN(logical(eye(nconditions)))=0; % fix the zero-diagonal
 
-% Models.CEGHMR = ones(nconditions, nconditions);
-% Models.CEGHMR([AC NC],[AC NC]) = 0;
-% Models.CEGHMR([AE NE],[AE NE]) = 0;
-% Models.CEGHMR([AG NG],[AG NG]) = 0;
-% Models.CEGHMR([AH NH],[AH NH]) = 0;
-% Models.CEGHMR([AM NM],[AM NM]) = 0;
-% Models.CEGHMR([AR NR],[AR NR]) = 0;
-% Models.CEGHMR(logical(eye(nconditions)))=0; % fix the zero-diagonal
+Models.CEGHMR = ones(nconditions, nconditions);
+Models.CEGHMR([AC NC],[AC NC]) = 0;
+Models.CEGHMR([AE NE],[AE NE]) = 0;
+Models.CEGHMR([AG NG],[AG NG]) = 0;
+Models.CEGHMR([AH NH],[AH NH]) = 0;
+Models.CEGHMR([AM NM],[AM NM]) = 0;
+Models.CEGHMR([AR NR],[AR NR]) = 0;
+Models.CEGHMR(logical(eye(nconditions)))=0; % fix the zero-diagonal
 
 % %get LLFs
    load([generalpath 'LLF_RDM_new.mat']);
