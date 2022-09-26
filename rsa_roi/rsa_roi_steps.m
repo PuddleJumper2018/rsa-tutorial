@@ -7,16 +7,16 @@
 % differential method.
 
 %%%%%%%%%%%%%%%%%%%%
-%Initialisation 
+%Initialisation
 %%%%%%%%%%%%%%%%%%%%
-% Customise the directories to account for your circumstances. 
+% Customise the directories to account for your circumstances.
 % Directory to where the ROI mask is located:
 % replace dir '//Users/sztuka/Documents/' with path to rsa-tutorial folder.
 masks = '/Users/sztuka/Documents/rsa-tutorial/rsa_roi/mask_used/';
 % Add the name of the mask you will use
 mask_names = {'r_cuneus'};
 % add is as a character vector to help automatise the process
-model = "r_cuneus"; % 
+model = "r_cuneus"; %
 % create directory for the results
 % replace dir '/Volumes/IMS_Drive/RSA_BIDS_2/' with path to derivatives
 % folder.
@@ -28,15 +28,15 @@ toolboxRoot = '/Users/sztuka/Documents/rsa-tutorial/rsa_roi/rsatoolbox.git/'; ad
 addpath('/Users/sztuka/SPM12/');
 % add the directory containing your betas
 data_dir = '/Volumes/IMS_Drive/RSA_BIDS_2/derivatives/1Level/RSA_1stLevel_1stDeriv/';
-% Parameters: 
+% Parameters:
 % subjects included
 subjects = 5;
 % how many conditions included (how many betas will be loaded)
 numConditions = 60;
-betacount = numConditions; 
+betacount = numConditions;
 subs = dir(fullfile(data_dir, 'sub-*'));
 % helper for wildcard
-subs = subs(1:subjects); 
+subs = subs(1:subjects);
 % add the path to structural images including wildcards
 betaPath = fullfile(data_dir,'[[subjectName]]/[[betaIdentifier]]');
 betanames = dir(rsa.util.replaceWildcards(betaPath, ...
@@ -56,7 +56,7 @@ condition_names_cell = {'I-C-A-1.jpg','I-C-A-10.jpg','I-C-A-11.jpg','I-C-A-3.jpg
     'I-G-N-1.jpg','I-G-N-13.jpg','I-G-N-16.jpg','I-G-N-5.jpg','I-G-N-7.jpg',...
     'I-H-N-29.jpg','I-H-N-39.jpg','I-H-N-41.jpg','I-H-N-44.jpg','I-H-N-7.jpg',...
     'I-M-N-1.jpg','I-M-N-4.jpg','I-M-N-5.jpg','I-M-N-6.jpg','I-M-N-8.jpg',...
-    'I-R-N-10.jpg','I-R-N-12.jpg','I-R-N-21.jpg','I-R-N-22.jpg','I-R-N-23.jpg'}; 
+    'I-R-N-10.jpg','I-R-N-12.jpg','I-R-N-21.jpg','I-R-N-22.jpg','I-R-N-23.jpg'};
 
 %%%%%%%%%%%%%%%%%%%%%%
 % User options %%
@@ -75,11 +75,11 @@ userOptions.subjectNames = {subs.name};
 userOptions.subjectPath = data_dir;
 % The path leading to where the scans are stored (not including subject-specific identifiers).
 userOptions.betaPath = betaPath;
-% Where is the folder where masks are located -> here in the MASK FOLDER 
+% Where is the folder where masks are located -> here in the MASK FOLDER
 userOptions.maskNames = mask_names;
 userOptions.maskPath = fullfile(masks,userOptions.maskNames);
 % Here you can load more than one ROI mask. Please mind this part doesn't
-% work for me for some reason. 
+% work for me for some reason.
 if strcmp(userOptions.maskNames(1), 'mask');
      userOptions.maskPath = fullfile(userOptions.subjectPath, ...
                                      '[[subjectName]]', '[[maskName]].nii');
@@ -100,7 +100,7 @@ userOptions.voxelSize = [2 2 2];
 % Save figures to PDF
 userOptions.saveFiguresPDF = true;
 userOptions.saveFiguresPS = false;
-% Save as a figure. 
+% Save as a figure.
 userOptions.saveFiguresFig = true;
 userOptions.writeOut = 1;
 userOptions.plottingStyle = 2;
@@ -109,10 +109,10 @@ userOptions.dpi = 300;
 % used in most cases.
 userOptions.criterion = 'metricstress';
 % A string indicating the distance measure with which to
-% calculate the RDMs. Defaults to 'Correlation'. I also used Euclidean. 
+% calculate the RDMs. Defaults to 'Correlation'. I also used Euclidean.
 userOption.distance = 'euclidean';
 
-%% This part will take some time. 
+%% This part will take some time.
 %%%%%%%%%%%%%%%%%%%%%%
 % Data preparation %%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -136,15 +136,15 @@ Models = rsa.constructModelRDMs(modelRDMs(), userOptions);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % First-order visualisation %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%In this step, average RDMs are displayed first. 
-%(RDMs are averaged according to user’s preferences, defaulting to subject- 
+%In this step, average RDMs are displayed first.
+%(RDMs are averaged according to user’s preferences, defaulting to subject-
 %and session-averaged RDMs for each RoI.) Then the MDS plots and
 % the dendrograms will be displayed and saved.
 userOptions.conditionLabels = condition_names_cell;
 userOptions.alternativeConditionLabels = condition_names_cell;
 userOptions.useAlternativeConditionLabels = true;
 %removed .fig. this function is in different directory.
-rsa.figureRDMs(RDMs, userOptions, struct('fileName', 'RoIRDMs', 'figureNumber', 1)); 
+rsa.figureRDMs(RDMs, userOptions, struct('fileName', 'RoIRDMs', 'figureNumber', 1));
 rsa.figureRDMs(Models, userOptions, struct('fileName', 'ModelRDMs', 'figureNumber', 2));
 rsa.MDSConditions(RDMs, userOptions);
 rsa.dendrogramConditions(RDMs, userOptions);
@@ -152,27 +152,25 @@ rsa.dendrogramConditions(RDMs, userOptions);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % relationship amongst multiple RDMs %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% compute and display a second-order similarity matrix from RDMs and multidimensional scalling of 
+% compute and display a second-order similarity matrix from RDMs and multidimensional scalling of
 % RDMs
 % The measurement type (Defaults to  v but any Matlab distance
 % measure may be used.)
 userOptions.distanceMeasure = 'Spearman';
 rsa.pairwiseCorrelateRDMs({RDMs, Models}, userOptions);
-localOptions.figI_shepardPlots = [14];
-localOptions.MDScriterion = 'metricstress';
-% MDSRDM performs second-order MDS, visualising the dissimilarities between
+MDSRDM performs second-order MDS, visualising the dissimilarities between
 % RDMs.
 % Note: Doesn't work for some reason for me you can try to comment out and see if
-% that works for you. 
-rsa.MDSRDMs({RDMs, Models}, userOptions); % problem with figureMDSArrangement 'disparities'. 
+% that works for you.
+rsa.MDSRDMs({RDMs, Models}, userOptions); % problem with figureMDSArrangement 'disparities'.
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % statistical inference %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Final step compared reference RDM (ROI RDM) to candidate RDMs (AN in our case).
-% See the decision-making process on slide. 
-roiIndex = 1;% index of the ROI for which the group average RDM will serve 
-% as the reference RDM. 
+% See the decision-making process on slide.
+roiIndex = 1;% index of the ROI for which the group average RDM will serve
+% as the reference RDM.
 for i=1:numel(Models)
     models{i}=Models(i);
 end
@@ -191,5 +189,3 @@ stats_p_r=rsa.compareRefRDM2candRDMs(RDMs(roiIndex), models, userOptions);
 % I am saving the results to .mat files
 save('stats.mat','stats_p_r');
 disp('done')
-
-
